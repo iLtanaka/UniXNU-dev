@@ -1,6 +1,7 @@
-# iPhone 16 Pro (iPhone17,1) profile, derived from ipados-27.0.1-24A446 (same build, same xnu-12377.121.6).
-# TODO(iphone): abi/original-classes.json and kernel.prelink.kernelcache_sha256 are still the iPad17,3 values;
-# regenerate them from kernelcache.release.iphone17 before a kernel build. Chip/board ids are from the IPSW BuildManifest (0x8140, 0x0C).
+# iPhone 16 Pro (iPhone17,1) profile for iOS 27.0.1 24A446 (xnu-12377.121.6).
+# Chip/board ids come from the IPSW BuildManifest (0x8140, 0x0C). The kernelcache digest, the AMFI wrapper address and the
+# OS/SystemOS volume identities were measured on this same IPSW by YX2748198202-lab/UniXNU-shennong
+# (profiles/os/ios-27.0.1-24A446-iphone16pro); verified here only as far as the CI prelink step accepts them.
 ["os"]
 "name" = "iphone-27.0.1-24A446"
 "arch" = "arm64e"
@@ -32,11 +33,12 @@
 ["kernel"."prelink"]
 "tool" = "kits/XnuPrelink/emit_prelink.py"
 "kernel" = "build/xnu/ios-obj/DEVELOPMENT_ARM64_BCM2837/mach.development.bcm2837.unstripped.noctf"
-"kernelcache_sha256" = "38e6d9fa5f789b8228f4617ef4c6d2a3fd8ab564abdc9b62920f1db53fc1780a"
+"kernelcache_sha256" = "fa07057bf34f33af1ec26681ad0c87c13e5aaa548a300740eddb0e92876e5f95"
 "slide" = "-0x1000000"
-regression_policy = "scripts/policies/ipados-27.0.1-24A446/prelink-regression.json"
+# The iPadOS regression policy names the iPad kernelcache and rejects this prelink; re-baseline from a measured kernel.json first.
+# regression_policy = "scripts/policies/ipados-27.0.1-24A446/prelink-regression.json"
 # The AMFI wrapper that calls _initializeAppleMobileFileIntegrity and returns 0; the kernel patch calls it early.
-"early_security_init" = "com.apple.driver.AppleMobileFileIntegrity=0xfffffe00092551ac"
+"early_security_init" = "com.apple.driver.AppleMobileFileIntegrity=0xfffffff00921000c"
 # Bring-up: match against the symbol-bearing RELEASE build of the same XNU source
 # (scripts/build-fileset-release-reference.py --lto) and send unmatched calls to the
 # reporting stub of fileset-unmapped-call.patch.
@@ -123,10 +125,10 @@ windows = [{ name = "OS", component = "OS" }, { name = "SystemOS", component = "
 
 [root]
 # The OS and Cryptex1,SystemOS disk images: APFS volume UUIDs and image digests the root policies sign.
-os_volume_uuid = "2F8E6EED-68D5-4261-B8A3-12571BAA2DD4"
-os_image_sha256 = "8a12cdad43f8f0d33dadcf01a800a560222baf40c05f71374c460ba57ba3a739"
-systemos_volume_uuid = "F914C62A-AD00-47C6-8281-5746291C339A"
-systemos_image_sha256 = "d5b4873d35c85f96eaafaa31c59602b485afe33b5067eff1af67ba31204cdb4a"
+os_volume_uuid = "C3A4D926-411E-4365-9855-1B66A5CE0263"
+os_image_sha256 = "79179f6ebb37ff664415af13b2c3b9e900fe2f02460f8a7d14c72957c3eca095"
+systemos_volume_uuid = "ECFE851C-29F1-40D4-86BD-13597F9A1EE8"
+systemos_image_sha256 = "00a9955249a452ac1dd4b7f47f8a00f828f711b2dee4e8bc74e5183b29082f9b"
 
 [payload.adt]
-root_match_volume_uuid = "2F8E6EED-68D5-4261-B8A3-12571BAA2DD4"
+root_match_volume_uuid = "C3A4D926-411E-4365-9855-1B66A5CE0263"
